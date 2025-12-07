@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>災害対策セルフチェック診断</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    background-color: #FFF8E7;
+    margin: 0;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+/* 質問カード */
+.question-card {
+    background-color: white;
+    padding: 1.4rem 1.6rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.3rem;
+}
+
+/* ボタン */
+button {
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 45%;
+}
+
+.yes-btn {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+.no-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.nav-btn {
+    background-color: #EEEEEE;
+    color: #333;
+    border: 1px solid #CCC;
+}
+
+.btn-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.section {
+    max-width: 500px;
+    margin: auto;
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="section"></div>
+
+<script>
+const QUESTIONS = [
+    {id: 1, genre: "goods", label: "防災グッズ", text: "非常持ち出し袋を置いていますか？"},
+    {id: 2, genre: "goods", label: "防災グッズ", text: "中身を年1回以上見直していますか？"},
+    {id: 3, genre: "evac",  label: "避難生活", text: "避難所の場所を把握していますか？"},
+    {id: 4, genre: "evac",  label: "避難生活", text: "家族との連絡手段を決めていますか？"},
+];
+
+let page = "home";
+let i = 0;
+let ans = {};
+
+function render() {
+    const app = document.getElementById("app");
+
+    if (page === "home") {
+        app.innerHTML = `
+            <h1>災害対策セルフチェック診断 ⛑️</h1>
+            <p>防災グッズと避難生活の準備状況を診断します。</p>
+            <div style="text-align:center;">
+                <button class="nav-btn" onclick="startQuiz()">診断を開始する ▶</button>
+            </div>
+        `;
+    }
+
+    else if (page === "quiz") {
+        const q = QUESTIONS[i];
+
+        app.innerHTML = `
+            <h2>質問 ${i+1} / 全 ${QUESTIONS.length}</h2>
+
+            <div class="question-card">
+                <div style="color:#666;font-size:0.9rem;font-weight:600;margin-bottom:0.3rem;">
+                    ${q.label}
+                </div>
+                <div style="font-size:1.1rem;">${q.text}</div>
+            </div>
+
+            <div class="btn-row">
+                <button class="yes-btn" onclick="choose(true)">はい</button>
+                <button class="no-btn" onclick="choose(false)">いいえ</button>
+            </div>
+
+            <div class="btn-row">
+                <button class="nav-btn" onclick="prev()" ${i===0 ? "disabled" : ""}>前へ</button>
+                <button class="nav-btn" onclick="goHome()">トップへ戻る</button>
+            </div>
+        `;
+    }
+
+    else if (page === "result") {
+        app.innerHTML = `
+            <h1>診断結果</h1>
+            <p>ここに詳細な診断結果を入れることができます。</p>
+            <div style="text-align:center;">
+                <button class="nav-btn" onclick="goHome()">もう一度診断する</button>
+            </div>
+        `;
+    }
+}
+
+function startQuiz() {
+    page = "quiz";
+    i = 0;
+    ans = {};
+    render();
+}
+
+function choose(v) {
+    const qid = QUESTIONS[i].id;
+    ans[qid] = v;
+
+    if (i === QUESTIONS.length - 1) {
+        page = "result";
+    } else {
+        i += 1;
+    }
+    render();
+}
+
+function prev() {
+    if (i > 0) i -= 1;
+    render();
+}
+
+function goHome() {
+    page = "home";
+    i = 0;
+    ans = {};
+    render();
+}
+
+render();
+</script>
+
+</body>
+</html>
+
