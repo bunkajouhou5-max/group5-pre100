@@ -37,21 +37,9 @@ button {
     width: 45%;
 }
 
-.yes-btn {
-    background-color: #FF6B6B;
-    color: white;
-}
-
-.no-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.nav-btn {
-    background-color: #EEEEEE;
-    color: #333;
-    border: 1px solid #CCC;
-}
+.yes-btn { background-color: #FF6B6B; color: white; }
+.no-btn  { background-color: #4CAF50; color: white; }
+.nav-btn { background-color: #EEEEEE; color: #333; border: 1px solid #CCC; }
 
 .btn-row {
     display: flex;
@@ -63,6 +51,16 @@ button {
     max-width: 500px;
     margin: auto;
 }
+
+.correct {
+    color: #2E8B57;
+    font-weight: bold;
+}
+
+.wrong {
+    color: #D9534F;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -70,24 +68,37 @@ button {
 <div id="app" class="section"></div>
 
 <script>
+/* ============================
+   ★ 質問データ
+   ・correct: 正解（true=はい が正解、false=いいえ が正解）
+   ・desc: 不正解だった場合の解説
+============================ */
 const QUESTIONS = [
-    {id: 1, genre: "goods", label: "防災グッズ", text: "非常持ち出し袋を置いていますか？"},
-    {id: 2, genre: "goods", label: "防災グッズ", text: "中身を年1回以上見直していますか？"},
-    {id: 3, genre: "evac",  label: "避難生活", text: "避難所の場所を把握していますか？"},
-    {id: 4, genre: "evac",  label: "避難生活", text: "家族との連絡手段を決めていますか？"},
+    {id: 1, label: "防災グッズ", text: "非常持ち出し袋を置いていますか？", correct: true,
+     desc: "非常持ち出し袋は災害時にすぐ避難できるように必須です。"},
+    {id: 2, label: "防災グッズ", text: "中身を年1回以上見直していますか？", correct: true,
+     desc: "水・食料・電池などは定期的な更新が必要です。"},
+    {id: 3, label: "避難生活", text: "避難所の場所を把握していますか？", correct: true,
+     desc: "事前に避難場所を知っておくことで迅速な避難ができます。"},
+    {id: 4, label: "避難生活", text: "家族との連絡手段を決めていますか？", correct: true,
+     desc: "安否確認のルールは被災時の混乱を減らします。"}
 ];
 
 let page = "home";
 let i = 0;
-let ans = {};
+let score = 0;
+let wrongList = [];   // 不正解だった質問の一覧
 
+/* ============================
+   ★ 画面描画
+============================ */
 function render() {
     const app = document.getElementById("app");
 
     if (page === "home") {
         app.innerHTML = `
             <h1>災害対策セルフチェック診断 ⛑️</h1>
-            <p>防災グッズと避難生活の準備状況を診断します。</p>
+            <p>防災の知識や備えをチェックできます。</p>
             <div style="text-align:center;">
                 <button class="nav-btn" onclick="startQuiz()">診断を開始する ▶</button>
             </div>
@@ -120,26 +131,54 @@ function render() {
     }
 
     else if (page === "result") {
+        const percent = Math.round((score / QUESTIONS.length) * 100);
+
+        let wrongHtml = "";
+        wrongList.forEach(item => {
+            wrongHtml += `
+                <div class="question-card">
+                    <div class="wrong">✖ ${item.text}</div>
+                    <p>${item.desc}</p>
+                </div>
+            `;
+        });
+
         app.innerHTML = `
             <h1>診断結果</h1>
-            <p>ここに詳細な診断結果を入れることができます。</p>
-            <div style="text-align:center;">
+            <h2>${percent}% の理解度です！</h2>
+
+            <h3>不正解だった問題と解説</h3>
+            ${wrongHtml || "<p class='correct'>全問正解です！素晴らしい！</p>"}
+
+            <div style="text-align:center; margin-top:20px;">
                 <button class="nav-btn" onclick="goHome()">もう一度診断する</button>
             </div>
         `;
     }
 }
 
+/* ============================
+   ★ 質問開始
+============================ */
 function startQuiz() {
     page = "quiz";
     i = 0;
-    ans = {};
+    score = 0;
+    wrongList = [];
     render();
 }
 
-function choose(v) {
-    const qid = QUESTIONS[i].id;
-    ans[qid] = v;
+/* ============================
+   ★ 回答処理
+============================ */
+function choose(answer) {
+    const q = QUESTIONS[i];
+
+    if (answer === q.correct) {
+        score += 1; // 正解
+    } else {
+        wrongList.push(q); // 不正解データを保存
+    }
 
     if (i === QUESTIONS.length - 1) {
         page = "result";
@@ -149,15 +188,19 @@ function choose(v) {
     render();
 }
 
+/* ============================
+   ★ 前の質問へ
+============================ */
 function prev() {
     if (i > 0) i -= 1;
     render();
 }
 
+/* ============================
+   ★ ホームへ戻る
+============================ */
 function goHome() {
     page = "home";
-    i = 0;
-    ans = {};
     render();
 }
 
@@ -166,4 +209,3 @@ render();
 
 </body>
 </html>
-
