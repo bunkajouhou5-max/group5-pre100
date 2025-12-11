@@ -82,8 +82,6 @@ const QUESTIONS = [
      desc: "事前に避難場所を知っておくことで迅速な避難ができます。"},
     {id: 4, label: "避難生活", text: "家族との連絡手段を決めていますか？", correct: true,
      desc: "安否確認のルールは被災時の混乱を減らします。"}
-    {id: 5, label: "避難生活", text: "地震の時には机の下に隠れる", correct: true,
-    desc: "隠れましょう"}
 ];
 
 let page = "home";
@@ -99,7 +97,7 @@ function render() {
 
     if (page === "home") {
         app.innerHTML = `
-            <h1>災害対策意識診断 ⛑️</h1>
+            <h1>災害意識診断 ⛑️</h1>
             <p>防災の知識や備えをチェックできます。</p>
             <div style="text-align:center;">
                 <button class="nav-btn" onclick="startQuiz()">診断を開始する ▶</button>
@@ -121,8 +119,8 @@ function render() {
             </div>
 
             <div class="btn-row">
-                <button class="yes-btn" onclick="choose(true)">〇</button>
-                <button class="no-btn" onclick="choose(false)">×</button>
+                <button class="yes-btn" onclick="choose(true)">はい</button>
+                <button class="no-btn" onclick="choose(false)">いいえ</button>
             </div>
 
             <div class="btn-row">
