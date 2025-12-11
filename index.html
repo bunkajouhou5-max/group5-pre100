@@ -82,6 +82,8 @@ const QUESTIONS = [
      desc: "事前に避難場所を知っておくことで迅速な避難ができます。"},
     {id: 4, label: "避難生活", text: "家族との連絡手段を決めていますか？", correct: true,
      desc: "安否確認のルールは被災時の混乱を減らします。"}
+    {id: 5, label: "災害後", text: "災害関連死とは津波に巻き込まれて死ぬことである", correct: true,
+     desc: "災害関連死とは災害に関連する死の事です。津波に巻き込まれるなど災害発生時の直接死ではありません。"}
 ];
 
 let page = "home";
@@ -97,10 +99,10 @@ function render() {
 
     if (page === "home") {
         app.innerHTML = `
-            <h1>災害意識診断 ⛑️</h1>
-            <p>防災の知識や備えをチェックできます。</p>
+            <h1>災害意識診断⛑️</h1>
+            <p>この診断はあなたの災害に関する理解度を分析します。</p>
             <div style="text-align:center;">
-                <button class="nav-btn" onclick="startQuiz()">診断を開始する ▶</button>
+                <button class="nav-btn" onclick="startQuiz()">スタート ▶</button>
             </div>
         `;
     }
@@ -125,7 +127,7 @@ function render() {
 
             <div class="btn-row">
                 <button class="nav-btn" onclick="prev()" ${i===0 ? "disabled" : ""}>前へ</button>
-                <button class="nav-btn" onclick="goHome()">トップへ戻る</button>
+                <button class="nav-btn" onclick="goHome()">最初に戻る</button>
             </div>
         `;
     }
